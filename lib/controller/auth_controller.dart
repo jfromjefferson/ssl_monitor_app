@@ -1,6 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
+import 'package:ssl_monitor/screen/main_screen.dart';
+import 'package:ssl_monitor/utils/functions.dart';
 import 'package:ssl_monitor/utils/requests.dart';
+import 'package:ssl_monitor/utils/utils.dart';
 
 class AuthController extends GetxController {
   final RxString _firstName = ''.obs;
@@ -32,8 +36,6 @@ class AuthController extends GetxController {
 
     super.onInit();
   }
-
-  // TODO: Clear fields if user press back button
 
   void setFirstName(String input) {
     _firstName.value = input;
@@ -91,18 +93,84 @@ class AuthController extends GetxController {
   }
 
   Future<void> auth() async {
-    if (_username.isNotEmpty && _password.isNotEmpty) {
+    Get.focusScope!.unfocus();
+
+    if (username.isNotEmpty && password.isNotEmpty) {
       Map<String, dynamic> data = {
-        'username': _username.value.toLowerCase(),
-        'password': _password.value,
+        'username': username.toLowerCase(),
+        'password': password,
         'apiKey': apiKey
       };
 
-      final response = await authUser(url: '$apiUrl/user/config/', data: data);
+      Get.dialog(
+        const Center(child: CircularProgressIndicator(color: purple)),
+        barrierDismissible: false,
+      );
 
-      print(response);
+      final result = await authUser(url: '$apiUrl/user/config/', data: data);
+
+      Get.back();
+
+      bool success = result['success'];
+
+      if (success) {
+        Get.delete<AuthController>();
+
+        Get.offAll(() => const MainScreen());
+      } else {
+        result['response'].forEach((key, value) {
+          showSnackbar(
+            success: success,
+            title: key,
+            message: value,
+          );
+        });
+      }
     }
   }
 
-  Future<void> createUser() async {}
+  Future<void> create() async {
+    Get.focusScope!.unfocus();
+
+    if (isCreateAccountButtonEnabled) {
+      Map<String, dynamic> data = {
+        'first_name': fistName,
+        'last_name': lastName,
+        'username': username,
+        'password': password,
+        'apiKey': apiKey,
+      };
+
+      Get.dialog(
+        const Center(child: CircularProgressIndicator(color: purple)),
+        barrierDismissible: false,
+      );
+
+      final result = await createUser(url: '$apiUrl/user/config/', data: data);
+
+      Get.back();
+
+      bool success = result['success'];
+
+      if (success) {
+        showSnackbar(
+          success: success,
+          title: 'Success!',
+          message: result['response']['message'],
+        );
+
+        Get.delete<AuthController>();
+
+        Get.offAll(() => const MainScreen());
+      } else {
+        result['response'].forEach((key, value) {
+          showSnackbar(
+            success: success,
+            title: key,
+            message: value,
+          );
+        });
+      }
+    }
+  }
 }

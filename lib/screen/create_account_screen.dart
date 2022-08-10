@@ -7,10 +7,22 @@ import 'package:ssl_monitor/custom_widget/custom_text.dart';
 import 'package:ssl_monitor/custom_widget/custom_text_field.dart';
 import 'package:ssl_monitor/utils/utils.dart';
 
-class CreateAccountScreen extends StatelessWidget {
-  final AuthController authController = Get.find();
+class CreateAccountScreen extends StatefulWidget {
+  const CreateAccountScreen({Key? key}) : super(key: key);
 
-  CreateAccountScreen({Key? key}) : super(key: key);
+  @override
+  State<CreateAccountScreen> createState() => _CreateAccountScreenState();
+}
+
+class _CreateAccountScreenState extends State<CreateAccountScreen> {
+  final AuthController authController = Get.put(AuthController());
+
+  @override
+  void dispose() {
+    Get.delete<AuthController>();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +76,9 @@ class CreateAccountScreen extends StatelessWidget {
                         hintText: 'Password',
                         fillColor: purple,
                         obscureText: authController.isPasswordObscured,
-                        suffixIcon: LineIcons.eye,
+                        suffixIcon: authController.isPasswordObscured
+                            ? LineIcons.eye
+                            : LineIcons.eyeSlash,
                         onPressed: authController.togglePasswordVisibility,
                       ),
                     ),
@@ -75,7 +89,9 @@ class CreateAccountScreen extends StatelessWidget {
                         hintText: 'Repeat password',
                         fillColor: purple,
                         obscureText: authController.isRepeatPasswordObscured,
-                        suffixIcon: LineIcons.eye,
+                        suffixIcon: authController.isRepeatPasswordObscured
+                            ? LineIcons.eye
+                            : LineIcons.eyeSlash,
                         onPressed:
                             authController.toggleRepeatPasswordVisibility,
                       ),
@@ -84,7 +100,7 @@ class CreateAccountScreen extends StatelessWidget {
                     Obx(
                       () => CustomButton(
                         onPressed: authController.isCreateAccountButtonEnabled
-                            ? authController.createUser
+                            ? authController.create
                             : () {},
                         text: 'Create new account',
                         buttonColor: authController.isCreateAccountButtonEnabled

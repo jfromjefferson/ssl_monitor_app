@@ -74,8 +74,9 @@ class AuthScreen extends StatelessWidget {
                   const SizedBox(height: 20),
                   InkWell(
                     onTap: () {
+                      Get.focusScope!.unfocus();
                       Get.to(
-                        () => CreateAccountScreen(),
+                        () => const CreateAccountScreen(),
                         transition: Transition.cupertino,
                       );
                     },
