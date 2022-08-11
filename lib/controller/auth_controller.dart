@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
+import 'package:ssl_monitor/database/model/user/query.dart';
+import 'package:ssl_monitor/database/model/user/user.dart';
 import 'package:ssl_monitor/screen/main_screen.dart';
 import 'package:ssl_monitor/utils/functions.dart';
 import 'package:ssl_monitor/utils/requests.dart';
@@ -114,9 +116,17 @@ class AuthController extends GetxController {
       bool success = result['success'];
 
       if (success) {
+        Map<String, dynamic> response = result['response'];
+        User user = User(
+          name: response['user_full_name'],
+          sysUserUuid: response['sys_user_uuid'],
+          extraInfo: response['extra_info'],
+        );
+
+        await createDBUser(user: user);
         Get.delete<AuthController>();
 
-        Get.offAll(() => const MainScreen());
+        Get.offAll(() => MainScreen());
       } else {
         result['response'].forEach((key, value) {
           showSnackbar(
@@ -161,7 +171,7 @@ class AuthController extends GetxController {
 
         Get.delete<AuthController>();
 
-        Get.offAll(() => const MainScreen());
+        Get.offAll(() => MainScreen());
       } else {
         result['response'].forEach((key, value) {
           showSnackbar(
