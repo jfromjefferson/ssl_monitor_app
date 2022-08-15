@@ -40,8 +40,9 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'SSL Monitor',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.light().copyWith(
-        primaryColor: purple,
+      theme: ThemeData(
+        primarySwatch: materialColor,
+        fontFamily: fontFamily,
       ),
       home: user == null ? AuthScreen() : MainScreen(),
     );

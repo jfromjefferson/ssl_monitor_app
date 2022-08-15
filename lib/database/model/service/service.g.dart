@@ -22,13 +22,15 @@ class ServiceAdapter extends TypeAdapter<Service> {
       serviceInfo: (fields[2] as Map).cast<String, dynamic>(),
       user: fields[4] as User,
       uuid: fields[3] as String,
+      enabled: fields[5] as bool,
+      notify: fields[6] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, Service obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -38,7 +40,11 @@ class ServiceAdapter extends TypeAdapter<Service> {
       ..writeByte(3)
       ..write(obj.uuid)
       ..writeByte(4)
-      ..write(obj.user);
+      ..write(obj.user)
+      ..writeByte(5)
+      ..write(obj.enabled)
+      ..writeByte(6)
+      ..write(obj.notify);
   }
 
   @override

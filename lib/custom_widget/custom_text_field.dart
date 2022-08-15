@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ssl_monitor/utils/utils.dart';
 
 class CustomTextField extends StatelessWidget {
   final double? size;
@@ -71,7 +70,6 @@ class CustomTextField extends StatelessWidget {
       maxLength: maxLength,
       maxLines: maxLines,
       style: TextStyle(
-        fontFamily: fontFamily,
         fontSize: size,
         color: textColor ?? Colors.white,
         fontWeight: weight,
@@ -93,13 +91,7 @@ class CustomTextField extends StatelessWidget {
         filled: filled,
         fillColor: filled ? fillColor : Colors.grey,
         hintText: hintText,
-        icon: icon != null
-            ? Icon(
-                icon,
-                size: 30,
-                color: textColor,
-              )
-            : null,
+        icon: icon != null ? Icon(icon, size: 30, color: textColor) : null,
         suffixIcon: IconButton(
           onPressed: onPressed,
           icon: Icon(
@@ -107,9 +99,6 @@ class CustomTextField extends StatelessWidget {
             size: 30,
             color: suffixIconColor ?? Colors.white,
           ),
-        ),
-        hintStyle: const TextStyle(
-          fontFamily: fontFamily,
         ),
       ),
     );

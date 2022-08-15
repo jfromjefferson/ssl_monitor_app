@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ssl_monitor/utils/utils.dart';
 
 class CustomText extends StatelessWidget {
   final String text;
@@ -36,7 +35,6 @@ class CustomText extends StatelessWidget {
         fontWeight: weight,
         fontSize: size,
         letterSpacing: spacing,
-        fontFamily: fontFamily,
       ),
     );
   }

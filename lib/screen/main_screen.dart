@@ -16,35 +16,55 @@ class MainScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: CustomText(
-            text: 'Hi, ${appController.userName.toString()}',
+          child: Obx(
+            () => CustomText(
+              text: 'Hi, ${appController.userName}',
+            ),
           ),
         ),
-        backgroundColor: purple,
       ),
       body: Container(
         padding: const EdgeInsets.only(left: 5, top: 10, right: 5),
-        child: ListView(
-          children: [
-            GestureDetector(
-              onTap: () {},
-              child: const Card(
-                elevation: 2,
-                child: ListTile(
-                  leading: Icon(
-                    LineIcons.globe,
-                    size: 40,
-                  ),
-                  title: CustomText(text: 'Hotel Polaris'),
-                  subtitle: CustomText(text: 'Valid until 2022-09-13: 13:25'),
+        child: appController.serviceList.isNotEmpty
+            ? Obx(
+                () => ListView.separated(
+                  itemCount: appController.serviceList.length,
+                  separatorBuilder: (BuildContext context, int index) =>
+                      const SizedBox(height: 15),
+                  itemBuilder: (BuildContext context, int index) {
+                    return GestureDetector(
+                      onTap: () {},
+                      child: Card(
+                        elevation: 2,
+                        child: ListTile(
+                          leading: const Icon(
+                            LineIcons.globe,
+                            size: 40,
+                          ),
+                          title: CustomText(
+                            text: appController.serviceList[index].name,
+                          ),
+                          subtitle: const CustomText(
+                            text: 'Valid until 2022-09-13: 13:25',
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              )
+            : const Center(
+                child: CustomText(
+                  text: 'Nothing to show :(',
+                  size: 23,
+                  weight: FontWeight.bold,
                 ),
               ),
-            )
-          ],
-        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          appController.resetData();
+
           Get.dialog(
             GestureDetector(
               onTap: () {
@@ -62,13 +82,13 @@ class MainScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       CustomTextField(
-                        onChanged: (String value) {},
+                        onChanged: appController.setServiceName,
                         hintText: 'Name',
                         fillColor: purple,
                       ),
                       const SizedBox(height: 10),
                       CustomTextField(
-                        onChanged: (String value) {},
+                        onChanged: appController.setServiceUrl,
                         hintText: 'Url',
                         fillColor: purple,
                         textCapitalization: TextCapitalization.none,
@@ -80,21 +100,25 @@ class MainScreen extends StatelessWidget {
                           Column(
                             children: [
                               const CustomText(text: 'Enabled'),
-                              Switch(
-                                onChanged: (bool value) {},
-                                value: false,
-                                activeColor: Colors.green,
-                              )
+                              Obx(
+                                () => Switch(
+                                  onChanged: appController.setIsEnabled,
+                                  value: appController.isEnabled,
+                                  activeColor: Colors.green,
+                                ),
+                              ),
                             ],
                           ),
                           Column(
                             children: [
                               const CustomText(text: 'Notify'),
-                              Switch(
-                                onChanged: (bool value) {},
-                                value: true,
-                                activeColor: Colors.green,
-                              )
+                              Obx(
+                                () => Switch(
+                                  onChanged: appController.setIsNotify,
+                                  value: appController.isNotify,
+                                  activeColor: Colors.green,
+                                ),
+                              ),
                             ],
                           ),
                         ],
@@ -103,16 +127,21 @@ class MainScreen extends StatelessWidget {
                   ),
                 ),
                 actions: [
-                  CustomButton(
-                    onPressed: () {
-                      Get.back();
-                    },
-                    text: 'Save',
-                    buttonColor: purple,
-                    padding: const EdgeInsets.all(5),
+                  Obx(
+                    () => CustomButton(
+                      onPressed: appController.isCreateServiceButtonEnabled
+                          ? appController.createService
+                          : null,
+                      text: 'Save',
+                      buttonColor: appController.isCreateServiceButtonEnabled
+                          ? purple
+                          : purple.withAlpha(950),
+                      padding: const EdgeInsets.all(5),
+                    ),
                   ),
                   CustomButton(
                     onPressed: () {
+                      appController.resetData();
                       Get.back();
                     },
                     text: 'Cancel',
@@ -125,7 +154,6 @@ class MainScreen extends StatelessWidget {
             barrierDismissible: false,
           );
         },
-        backgroundColor: purple,
         child: const Icon(LineIcons.plus),
       ),
     );

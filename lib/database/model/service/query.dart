@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:ssl_monitor/database/model/service/service.dart';
 
-Future<void> createService({required Service service}) async {
+Future<void> createDBService({required Service service}) async {
   Box box = await Hive.openBox<Service>('service');
 
   await box.add(service);

@@ -20,12 +20,20 @@ class Service extends HiveObject {
   @HiveField(4)
   late User user;
 
+  @HiveField(5)
+  late bool enabled;
+
+  @HiveField(6)
+  late bool notify;
+
   Service({
     required this.name,
     required this.url,
     required this.serviceInfo,
     required this.user,
     required this.uuid,
+    required this.enabled,
+    required this.notify,
   });
 
   Map<String, dynamic> toMap() {
@@ -35,6 +43,8 @@ class Service extends HiveObject {
       'serviceInfo': serviceInfo,
       'user': user.toMap(),
       'uuid': uuid,
+      'enabled': enabled,
+      'notify': notify,
     };
 
     return map;
@@ -46,5 +56,7 @@ class Service extends HiveObject {
     serviceInfo = map['serviceInfo'];
     user = map['user'];
     uuid = map['uuid'];
+    enabled = map['enabled'];
+    notify = map['notify'];
   }
 }

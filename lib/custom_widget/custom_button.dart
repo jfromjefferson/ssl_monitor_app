@@ -9,15 +9,15 @@ class CustomButton extends StatelessWidget {
   final Color? textColor;
   final EdgeInsets? padding;
 
-  const CustomButton(
-      {Key? key,
-      required this.onPressed,
-      required this.text,
-      this.padding,
-      this.textSize = 18,
-      this.buttonColor,
-      this.textColor})
-      : super(key: key);
+  const CustomButton({
+    Key? key,
+    required this.onPressed,
+    required this.text,
+    this.padding,
+    this.textSize,
+    this.buttonColor,
+    this.textColor,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class CustomButton extends StatelessWidget {
       ),
       child: CustomText(
         text: text,
-        size: textSize,
+        size: textSize ?? 18,
         color: textColor ?? Colors.white,
       ),
     );
