@@ -5,7 +5,7 @@ class CustomButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final String text;
   final double? textSize;
-  final Color? buttonColor;
+  final Color buttonColor;
   final Color? textColor;
   final EdgeInsets? padding;
 
@@ -13,9 +13,9 @@ class CustomButton extends StatelessWidget {
     Key? key,
     required this.onPressed,
     required this.text,
+    required this.buttonColor,
     this.padding,
     this.textSize,
-    this.buttonColor,
     this.textColor,
   }) : super(key: key);
 
@@ -25,7 +25,8 @@ class CustomButton extends StatelessWidget {
       key: key,
       onPressed: onPressed,
       style: TextButton.styleFrom(
-        backgroundColor: buttonColor ?? Colors.blue,
+        backgroundColor:
+            onPressed != null ? buttonColor : buttonColor.withAlpha(950),
         padding: padding ?? const EdgeInsets.symmetric(vertical: 15),
       ),
       child: CustomText(

@@ -85,10 +85,6 @@ class AppController extends GetxController {
     Get.focusScope!.unfocus();
 
     if (isCreateServiceButtonEnabled) {
-      // if (!serviceName.isURL) {
-      //   _serviceName.value = 'https://$serviceName';
-      // }
-
       Service service = Service(
         name: serviceName,
         url: serviceUrl,
@@ -99,11 +95,15 @@ class AppController extends GetxController {
         serviceInfo: {},
       );
 
+      if (!serviceUrl.contains('https')) {
+        setServiceUrl('https://$serviceUrl');
+      }
+
       Map<String, dynamic> data = {
         'apiKey': apiKey,
         'SysUserUuid': user.sysUserUuid,
         'name': serviceName,
-        'url': 'https://${serviceUrl.toLowerCase()}',
+        'url': serviceUrl.toLowerCase(),
         'enabled': isEnabled,
         'notify': isNotify,
       };
@@ -118,7 +118,7 @@ class AppController extends GetxController {
         data: data,
       );
 
-      Get.back();
+      Get.back(closeOverlays: true);
 
       bool success = result['success'];
 
@@ -133,10 +133,11 @@ class AppController extends GetxController {
         createDBService(service: service);
         _serviceList.add(service);
 
-        Get.back();
+        Get.back(closeOverlays: true);
 
         showSnackbar(success: success, title: 'Success', message: message);
       } else {
+        result['response'].remove('status_code');
         result['response'].forEach((key, value) {
           showSnackbar(
             success: success,
@@ -145,6 +146,49 @@ class AppController extends GetxController {
           );
         });
       }
+    }
+  }
+
+  void deleteService({required Service service}) async {
+    Requests requests = Requests();
+
+    Map<String, dynamic> headers = {
+      'Api-key': apiKey,
+      'Sys-user-uuid': service.user.sysUserUuid,
+      'Service-uuid': service.uuid,
+    };
+
+    Get.dialog(
+      const Center(child: CircularProgressIndicator()),
+      barrierDismissible: false,
+    );
+
+    final result = await requests.delete(
+      url: '$apiUrl/service/config/',
+      headers: headers,
+    );
+
+    Get.back(closeOverlays: true);
+
+    bool success = result['success'];
+
+    if (success) {
+      showSnackbar(
+        success: success,
+        title: 'Success',
+        message: result['message'],
+      );
+      service.delete();
+      _serviceList.value = await getServiceList();
+    } else {
+      result['response_error'].remove('status_code');
+      result['response_error'].forEach((key, value) {
+        showSnackbar(
+          success: success,
+          title: key,
+          message: value,
+        );
+      });
     }
   }
 }

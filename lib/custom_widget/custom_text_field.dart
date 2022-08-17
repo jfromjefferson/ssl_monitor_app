@@ -10,11 +10,11 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController? controller;
   final int? maxLines;
   final int? maxLength;
-  final bool autoFocus;
-  final bool readOnly;
-  final bool obscureText;
+  final bool? autoFocus;
+  final bool? readOnly;
+  final bool? obscureText;
   final Color? fillColor;
-  final bool filled;
+  final bool? filled;
   final IconData? icon;
   final IconData? suffixIcon;
   final Color? suffixIconColor;
@@ -25,6 +25,8 @@ class CustomTextField extends StatelessWidget {
   final double? borderRadius;
   final Function(String)? onSubmitted;
   final bool? outline;
+  final bool? enableSuggestions;
+  final bool? autoCorrect;
 
   const CustomTextField({
     Key? key,
@@ -35,13 +37,13 @@ class CustomTextField extends StatelessWidget {
     this.inputType,
     this.inputFormatter,
     this.controller,
-    this.maxLines = 1,
+    this.maxLines,
     this.maxLength,
-    this.autoFocus = false,
-    this.readOnly = false,
-    this.obscureText = false,
+    this.autoFocus,
+    this.readOnly,
+    this.obscureText,
     this.fillColor,
-    this.filled = true,
+    this.filled,
     this.icon,
     this.suffixIcon,
     this.suffixIconColor,
@@ -51,16 +53,20 @@ class CustomTextField extends StatelessWidget {
     this.borderRadius,
     this.onSubmitted,
     this.outline,
+    this.enableSuggestions,
+    this.autoCorrect,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       key: key,
+      enableSuggestions: enableSuggestions ?? true,
+      autocorrect: autoCorrect ?? true,
       onSubmitted: onSubmitted,
-      obscureText: obscureText,
-      autofocus: autoFocus,
-      readOnly: readOnly,
+      obscureText: obscureText ?? false,
+      autofocus: autoFocus ?? false,
+      readOnly: readOnly ?? false,
       controller: controller,
       onChanged: onChanged,
       keyboardType: inputType,
@@ -68,7 +74,7 @@ class CustomTextField extends StatelessWidget {
       textCapitalization: textCapitalization ?? TextCapitalization.sentences,
       textAlign: TextAlign.start,
       maxLength: maxLength,
-      maxLines: maxLines,
+      maxLines: maxLines ?? 1,
       style: TextStyle(
         fontSize: size,
         color: textColor ?? Colors.white,
@@ -88,8 +94,8 @@ class CustomTextField extends StatelessWidget {
           height: 2,
           color: textColor ?? Colors.white,
         ),
-        filled: filled,
-        fillColor: filled ? fillColor : Colors.grey,
+        filled: filled ?? true,
+        fillColor: fillColor ?? Colors.grey,
         hintText: hintText,
         icon: icon != null ? Icon(icon, size: 30, color: textColor) : null,
         suffixIcon: IconButton(
