@@ -71,8 +71,8 @@ void showServiceConfigDialog({
         Get.focusScope!.unfocus();
       },
       child: AlertDialog(
-        title: const CustomText(
-          text: 'New service',
+        title: CustomText(
+          text: service == null ? 'New service' : 'Update service',
           size: 20,
           weight: FontWeight.bold,
           align: TextAlign.center,
@@ -92,10 +92,11 @@ void showServiceConfigDialog({
                 controller: serviceUrlController,
                 onChanged: appController.setServiceUrl,
                 hintText: 'Url',
-                fillColor: purple,
+                fillColor: service == null ? purple : purple.withAlpha(950),
                 textCapitalization: TextCapitalization.none,
                 enableSuggestions: false,
                 autoCorrect: false,
+                readOnly: service == null ? false : true,
               ),
               const SizedBox(height: 10),
               Row(
@@ -131,18 +132,18 @@ void showServiceConfigDialog({
           ),
         ),
         actions: [
-          service == null
-              ? Obx(
-                  () => CustomButton(
-                    onPressed: appController.isCreateServiceButtonEnabled
-                        ? appController.createService
-                        : null,
-                    text: 'Save',
-                    buttonColor: purple,
-                    padding: const EdgeInsets.all(5),
-                  ),
-                )
-              : CustomButton(
+          CustomButton(
+            onPressed: appController.isCreateServiceButtonEnabled
+                ? service == null
+                    ? appController.createService
+                    : () => appController.updateService(service: service)
+                : null,
+            text: service == null ? 'Save' : 'Update',
+            buttonColor: purple,
+            padding: const EdgeInsets.all(5),
+          ),
+          service != null
+              ? CustomButton(
                   onPressed: () {
                     Get.back();
                     appController.deleteService(service: service);
@@ -150,7 +151,8 @@ void showServiceConfigDialog({
                   text: 'Delete',
                   buttonColor: Colors.orange,
                   padding: const EdgeInsets.all(5),
-                ),
+                )
+              : const SizedBox(),
           CustomButton(
             onPressed: () {
               appController.resetData();

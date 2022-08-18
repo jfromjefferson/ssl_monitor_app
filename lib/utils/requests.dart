@@ -160,6 +160,37 @@ class Requests {
     }
   }
 
+  Future<Map<String, dynamic>> put({
+    required String url,
+    int? timeout,
+    Map<String, dynamic>? data,
+    Map<String, dynamic>? headers,
+  }) async {
+    if (timeout != null) {
+      dio.options.connectTimeout = timeout;
+    }
+
+    if (headers != null) {
+      headers.forEach((key, value) {
+        dio.options.headers[key] = value;
+      });
+    }
+
+    try {
+      Response<dynamic> response = await dio.put(url, data: data);
+
+      return {
+        'success': response.statusCode == 200,
+        ...response.data,
+      };
+    } on DioError catch (e) {
+      return {
+        'success': false,
+        'response_error': e.response?.data,
+      };
+    }
+  }
+
   Future<Map<String, dynamic>> delete({
     required String url,
     int? timeout,

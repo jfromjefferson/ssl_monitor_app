@@ -149,6 +149,63 @@ class AppController extends GetxController {
     }
   }
 
+  void updateService({required Service service}) async {
+    Get.focusScope!.unfocus();
+
+    Requests requests = Requests();
+
+    Map<String, dynamic> data = {
+      'name': serviceName,
+      'enabled': isEnabled,
+      'send_notification': isNotify,
+    };
+
+    Map<String, dynamic> headers = {
+      'Api-key': apiKey,
+      'Sys-user-uuid': service.user.sysUserUuid,
+      'Service-uuid': service.uuid,
+    };
+
+    Get.dialog(
+      const Center(child: CircularProgressIndicator()),
+      barrierDismissible: false,
+    );
+
+    final result = await requests.put(
+      url: '$apiUrl/service/config/',
+      data: data,
+      headers: headers,
+    );
+
+    Get.back(closeOverlays: true);
+
+    bool success = result['success'];
+
+    if (success) {
+      service.name = serviceName;
+      service.enabled = isEnabled;
+      service.notify = isNotify;
+      service.save();
+
+      _serviceList.value = await getServiceList();
+
+      showSnackbar(
+        success: success,
+        title: 'Success',
+        message: result['message'],
+      );
+    } else {
+      result['response_error'].remove('status_code');
+      result['response_error'].forEach((key, value) {
+        showSnackbar(
+          success: success,
+          title: key,
+          message: value,
+        );
+      });
+    }
+  }
+
   void deleteService({required Service service}) async {
     Requests requests = Requests();
 
