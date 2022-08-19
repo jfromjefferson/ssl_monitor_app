@@ -72,13 +72,13 @@ class AppController extends GetxController {
   void setIsEnabled(bool isEnabled) {
     _isEnabled.value = isEnabled;
 
-    toggleCreateServiceButton();
+    // toggleCreateServiceButton();
   }
 
   void setIsNotify(bool isNotify) {
     _isNotify.value = isNotify;
 
-    toggleCreateServiceButton();
+    // toggleCreateServiceButton();
   }
 
   void createService() async {

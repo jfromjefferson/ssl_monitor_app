@@ -9,6 +9,7 @@ import 'package:ssl_monitor/database/model/user/user.dart';
 import 'package:ssl_monitor/screen/auth_screen.dart';
 import 'package:ssl_monitor/screen/main_screen.dart';
 import 'package:ssl_monitor/utils/functions.dart';
+import 'package:ssl_monitor/utils/local_notification.dart';
 import 'package:ssl_monitor/utils/utils.dart';
 
 Future<void> main() async {
@@ -19,6 +20,7 @@ Future<void> main() async {
 
   await dotenv.load(fileName: '.env');
   await Hive.initFlutter();
+  await LocalNotificationService.initialize();
 
   registerAdapters();
 

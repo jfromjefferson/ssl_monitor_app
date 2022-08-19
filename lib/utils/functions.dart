@@ -132,35 +132,54 @@ void showServiceConfigDialog({
           ),
         ),
         actions: [
-          CustomButton(
-            onPressed: appController.isCreateServiceButtonEnabled
-                ? service == null
-                    ? appController.createService
-                    : () => appController.updateService(service: service)
-                : null,
-            text: service == null ? 'Save' : 'Update',
-            buttonColor: purple,
-            padding: const EdgeInsets.all(5),
-          ),
-          service != null
-              ? CustomButton(
-                  onPressed: () {
-                    Get.back();
-                    appController.deleteService(service: service);
-                  },
-                  text: 'Delete',
-                  buttonColor: Colors.orange,
-                  padding: const EdgeInsets.all(5),
-                )
-              : const SizedBox(),
-          CustomButton(
-            onPressed: () {
-              appController.resetData();
-              Get.back(closeOverlays: true);
-            },
-            text: 'Cancel',
-            buttonColor: Colors.red,
-            padding: const EdgeInsets.all(5),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              service == null
+                  ? Obx(
+                      () => CustomButton(
+                        onPressed: appController.isCreateServiceButtonEnabled
+                            ? appController.createService
+                            : null,
+                        text: 'Save',
+                        buttonColor: purple,
+                        padding: const EdgeInsets.all(5),
+                      ),
+                    )
+                  : Row(
+                      children: [
+                        CustomButton(
+                          onPressed: appController.isCreateServiceButtonEnabled
+                              ? () =>
+                                  appController.updateService(service: service)
+                              : null,
+                          text: 'Update',
+                          buttonColor: purple,
+                          padding: const EdgeInsets.all(5),
+                        ),
+                        const SizedBox(width: 5),
+                        CustomButton(
+                          onPressed: () {
+                            Get.back();
+                            appController.deleteService(service: service);
+                          },
+                          text: 'Delete',
+                          buttonColor: Colors.orange,
+                          padding: const EdgeInsets.all(5),
+                        ),
+                      ],
+                    ),
+              const SizedBox(width: 5),
+              CustomButton(
+                onPressed: () {
+                  appController.resetData();
+                  Get.back(closeOverlays: true);
+                },
+                text: 'Cancel',
+                buttonColor: Colors.red,
+                padding: const EdgeInsets.all(5),
+              ),
+            ],
           ),
         ],
       ),

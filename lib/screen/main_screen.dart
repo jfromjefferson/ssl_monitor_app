@@ -4,6 +4,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:ssl_monitor/controller/app_controller.dart';
 import 'package:ssl_monitor/custom_widget/custom_text.dart';
 import 'package:ssl_monitor/utils/functions.dart';
+import 'package:ssl_monitor/utils/local_notification.dart';
 
 class MainScreen extends StatelessWidget {
   final AppController appController = Get.put(AppController());
@@ -31,12 +32,15 @@ class MainScreen extends StatelessWidget {
                       const SizedBox(height: 10),
                   itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
-                      onTap: () {
-                        Get.back(closeOverlays: true);
-                        showServiceConfigDialog(
-                          appController: appController,
+                      onTap: () async {
+                        await LocalNotificationService.schedule(
                           service: appController.serviceList[index],
                         );
+                        // Get.back(closeOverlays: true);
+                        // showServiceConfigDialog(
+                        //   appController: appController,
+                        //   service: appController.serviceList[index],
+                        // );
                       },
                       child: Card(
                         elevation: 2,
