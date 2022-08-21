@@ -48,6 +48,24 @@ String formatCertExpiryDate({
   return dateFormatted;
 }
 
+List<DateTime> getDaysInBetween({required DateTime certValidUntil}) {
+  List<DateTime> days = [];
+
+  for (int i = 0; i <= 10; i++) {
+    days.add(
+      DateTime(
+        certValidUntil.year,
+        certValidUntil.month,
+        certValidUntil.day - i,
+        // To set notification to 08:00 AM (America/Sao_Paulo) subtract 3 from final hour. Ex:. 8 - 3 5
+        5,
+      ),
+    );
+  }
+
+  return days;
+}
+
 void showServiceConfigDialog({
   required AppController appController,
   Service? service,
