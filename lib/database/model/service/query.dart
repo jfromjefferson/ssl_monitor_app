@@ -17,3 +17,18 @@ Future<List<Service>> getServiceList() async {
 
   return serviceList;
 }
+
+Future<Service> getOneService({required String uuid}) async {
+  Box box = await Hive.openBox<Service>('service');
+
+  final filteredService =
+      box.values.where((element) => element.uuid == uuid).first;
+
+  return filteredService;
+}
+
+Future<void> clearService() async {
+  Box box = await Hive.openBox<Service>('service');
+
+  await box.clear();
+}

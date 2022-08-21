@@ -10,6 +10,7 @@ import 'package:ssl_monitor/screen/auth_screen.dart';
 import 'package:ssl_monitor/screen/main_screen.dart';
 import 'package:ssl_monitor/utils/functions.dart';
 import 'package:ssl_monitor/utils/local_notification.dart';
+import 'package:ssl_monitor/utils/translations.dart';
 import 'package:ssl_monitor/utils/utils.dart';
 
 Future<void> main() async {
@@ -40,6 +41,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      translations: AppTranslation(),
+      locale: const Locale('en_US'),
+      fallbackLocale: const Locale('en_US'),
       title: 'SSL Monitor',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

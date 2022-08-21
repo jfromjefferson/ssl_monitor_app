@@ -6,6 +6,7 @@ import 'package:ssl_monitor/database/model/service/service.dart';
 import 'package:ssl_monitor/database/model/user/query.dart';
 import 'package:ssl_monitor/database/model/user/user.dart';
 import 'package:ssl_monitor/utils/functions.dart';
+import 'package:ssl_monitor/utils/local_notification.dart';
 import 'package:ssl_monitor/utils/requests.dart';
 
 class AppController extends GetxController {
@@ -37,6 +38,10 @@ class AppController extends GetxController {
     user = (await getUser())!;
     _serviceList.value = await getServiceList();
     _userName.value = user.name;
+
+    if (serviceList.isEmpty) {
+      await getServiceFromServer();
+    }
 
     super.onInit();
   }
@@ -130,8 +135,12 @@ class AppController extends GetxController {
         service.serviceInfo = serviceInfo;
         service.uuid = serviceInfo['uuid'];
 
-        createDBService(service: service);
+        await createDBService(service: service);
         _serviceList.add(service);
+
+        Service createdService = await getOneService(uuid: service.uuid);
+
+        await LocalNotificationService.schedule(service: createdService);
 
         Get.back(closeOverlays: true);
 
@@ -189,6 +198,12 @@ class AppController extends GetxController {
 
       _serviceList.value = await getServiceList();
 
+      await LocalNotificationService.cancelNotification(id: service.key);
+
+      if (isEnabled && isNotify) {
+        await LocalNotificationService.schedule(service: service);
+      }
+
       showSnackbar(
         success: success,
         title: 'Success',
@@ -235,8 +250,74 @@ class AppController extends GetxController {
         title: 'Success',
         message: result['message'],
       );
+
+      await LocalNotificationService.cancelNotification(id: service.key);
+
       service.delete();
       _serviceList.value = await getServiceList();
+    } else {
+      result['response_error'].remove('status_code');
+      result['response_error'].forEach((key, value) {
+        showSnackbar(
+          success: success,
+          title: key,
+          message: value,
+        );
+      });
+    }
+  }
+
+  Future<void> getServiceFromServer() async {
+    Requests requests = Requests();
+
+    Map<String, dynamic> headers = {
+      'Api-key': apiKey,
+      'Sys-user-uuid': user.sysUserUuid,
+    };
+
+    final result = await requests.get(
+      url: '$apiUrl/service/config/',
+      headers: headers,
+    );
+
+    bool success = result['success'];
+
+    if (success) {
+      List serviceDictList = result['service_dict_list'];
+
+      if (serviceDictList.isNotEmpty) {
+        for (var serviceTemp in serviceDictList) {
+          Map<String, dynamic> serviceInfo = {
+            'name': serviceTemp['name'],
+            'url': serviceTemp['url'],
+            'ssl_properties': serviceTemp['ssl_properties']
+          };
+
+          Service service = Service(
+            name: serviceTemp['name'],
+            url: serviceTemp['url'],
+            enabled: serviceTemp['enabled'],
+            serviceInfo: serviceInfo,
+            notify: serviceTemp['enabled'],
+            uuid: serviceTemp['uuid'],
+            user: user,
+          );
+
+          await createDBService(service: service);
+        }
+
+        _serviceList.value = await getServiceList();
+
+        for (Service service in serviceList) {
+          await LocalNotificationService.schedule(service: service);
+        }
+
+        showSnackbar(
+          success: success,
+          title: 'Success',
+          message: 'All services have been created successfully!',
+        );
+      }
     } else {
       result['response_error'].remove('status_code');
       result['response_error'].forEach((key, value) {

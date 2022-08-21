@@ -2,6 +2,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:ssl_monitor/database/model/service/service.dart';
 import 'package:ssl_monitor/utils/functions.dart';
+import 'package:ssl_monitor/utils/utils.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -16,6 +17,8 @@ class LocalNotificationService {
       channelDescription: 'Service notification',
       importance: Importance.max,
       priority: Priority.high,
+      styleInformation: BigTextStyleInformation(''),
+      color: purple,
     ),
   );
 
@@ -43,7 +46,7 @@ class LocalNotificationService {
 
       final dateList = getDaysInBetween(certValidUntil: strToDateTime);
 
-      /*for (DateTime date in dateList) {
+      for (DateTime date in dateList) {
         tz.TZDateTime notificationTime = tz.TZDateTime.from(
           date,
           tz.local,
@@ -52,16 +55,17 @@ class LocalNotificationService {
         await _notificationsPlugin.zonedSchedule(
           service.key,
           service.name,
-          'Your certificate will expire in ${date.difference(DateTime.now()).inDays} days',
+          'Your certificate will expire in ${date.difference(DateTime.now()).inDays} days (Tap here to stop notifications for ${service.name})',
           notificationTime,
           _notificationDetails,
           uiLocalNotificationDateInterpretation:
               UILocalNotificationDateInterpretation.absoluteTime,
           androidAllowWhileIdle: true,
+          payload: service.uuid.toString(),
         );
-      }*/
+      }
 
-      tz.TZDateTime time = tz.TZDateTime.from(
+      /*tz.TZDateTime time = tz.TZDateTime.from(
         DateTime.now().add(
           const Duration(seconds: 5),
         ),
@@ -71,14 +75,15 @@ class LocalNotificationService {
       await _notificationsPlugin.zonedSchedule(
         service.key,
         service.name,
-        'Your certificate will expire in ${strToDateTime.difference(DateTime.now()).inDays} days',
+        'Your certificate will expire in ${strToDateTime.difference(DateTime.now()).inDays} days (Tap here to stop notifications for ${service.name})',
         time,
         _notificationDetails,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
         androidAllowWhileIdle: true,
-        payload: 'Payload?',
-      );
+        payload: service.uuid.toString(),
+      );*/
+
     } catch (e) {
       print({'Err': e});
     }
@@ -87,10 +92,8 @@ class LocalNotificationService {
   static Future<void> cancelNotification({required int id}) async {
     await _notificationsPlugin.cancel(id);
   }
-}
 
-void selectNotification(String? payload) async {
-  // if (payload != null) {
-  print('notification payload: $payload');
-  // }
+  static Future<void> cancelAllNotifications() async {
+    await _notificationsPlugin.cancelAll();
+  }
 }

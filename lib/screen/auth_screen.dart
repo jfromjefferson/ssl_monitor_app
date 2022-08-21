@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
@@ -88,6 +89,17 @@ class AuthScreen extends StatelessWidget {
                         weight: FontWeight.bold,
                         color: purple,
                       ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  DropdownSearch<String>(
+                    onChanged: (String? value) {
+                      print(value);
+                    },
+                    items: const ['English', 'Português'],
+                    selectedItem: 'English',
+                    popupProps: const PopupProps.dialog(
+                      constraints: BoxConstraints(maxHeight: 130),
                     ),
                   ),
                 ],

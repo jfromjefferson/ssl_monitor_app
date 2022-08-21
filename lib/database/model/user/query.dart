@@ -18,3 +18,9 @@ Future<User?> getUser() async {
 
   return user;
 }
+
+Future<void> clearUser() async {
+  Box box = await Hive.openBox<User>('user');
+
+  await box.clear();
+}

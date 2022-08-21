@@ -6,8 +6,11 @@ import 'package:ssl_monitor/controller/app_controller.dart';
 import 'package:ssl_monitor/custom_widget/custom_button.dart';
 import 'package:ssl_monitor/custom_widget/custom_text.dart';
 import 'package:ssl_monitor/custom_widget/custom_text_field.dart';
+import 'package:ssl_monitor/database/model/service/query.dart';
 import 'package:ssl_monitor/database/model/service/service.dart';
 import 'package:ssl_monitor/database/model/user/user.dart';
+import 'package:ssl_monitor/screen/main_screen.dart';
+import 'package:ssl_monitor/utils/local_notification.dart';
 import 'package:ssl_monitor/utils/utils.dart';
 
 void showSnackbar({
@@ -57,13 +60,55 @@ List<DateTime> getDaysInBetween({required DateTime certValidUntil}) {
         certValidUntil.year,
         certValidUntil.month,
         certValidUntil.day - i,
-        // To set notification to 08:00 AM (America/Sao_Paulo) subtract 3 from final hour. Ex:. 8 - 3 5
+        // To set notification to 08:00 AM (America/Sao_Paulo) subtract 3 from final hour. Ex:. 8 - 3 = 5
         5,
       ),
     );
   }
 
   return days;
+}
+
+void selectNotification(String? payload) async {
+  if (payload != null) {
+    Service service = await getOneService(uuid: payload);
+
+    Get.dialog(
+      AlertDialog(
+        title: const CustomText(text: 'Cancel notification'),
+        content: CustomText(
+          text:
+              'Are you sure you want to cancel all notifications for ${service.name}?',
+        ),
+        actions: [
+          CustomButton(
+            onPressed: () {
+              service.notify = false;
+
+              LocalNotificationService.cancelNotification(id: service.key);
+
+              Get.delete<AppController>();
+              Get.offAll(() => MainScreen());
+            },
+            text: 'Yes',
+            buttonColor: Colors.red,
+            padding: const EdgeInsets.all(5),
+          ),
+          CustomButton(
+            onPressed: () {
+              Get.back();
+            },
+            text: 'No',
+            buttonColor: purple,
+            padding: const EdgeInsets.all(5),
+          ),
+        ],
+      ),
+      barrierDismissible: false,
+    );
+  } else {
+    Get.snackbar('Error', 'Notification not found');
+  }
 }
 
 void showServiceConfigDialog({
