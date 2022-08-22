@@ -39,7 +39,7 @@ class AuthScreen extends StatelessWidget {
                     children: [
                       CustomTextField(
                         onChanged: authController.setUsername,
-                        hintText: 'Username',
+                        hintText: 'username_text_field'.tr,
                         fillColor: purple,
                         textCapitalization: TextCapitalization.none,
                       ),
@@ -51,7 +51,7 @@ class AuthScreen extends StatelessWidget {
                               ? LineIcons.eye
                               : LineIcons.eyeSlash,
                           onPressed: authController.togglePasswordVisibility,
-                          hintText: 'Password',
+                          hintText: 'password_text_field'.tr,
                           fillColor: purple,
                           obscureText: authController.isPasswordObscured,
                         ),
@@ -63,7 +63,7 @@ class AuthScreen extends StatelessWidget {
                                   authController.password.isNotEmpty
                               ? authController.auth
                               : () {},
-                          text: 'Login',
+                          text: 'login'.tr,
                           buttonColor: authController.username.isNotEmpty &&
                                   authController.password.isNotEmpty
                               ? purple
@@ -81,10 +81,10 @@ class AuthScreen extends StatelessWidget {
                         transition: Transition.cupertino,
                       );
                     },
-                    child: const Padding(
-                      padding: EdgeInsets.all(8.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
                       child: CustomText(
-                        text: 'Don\'t have an account?',
+                        text: 'create_account_text'.tr,
                         size: 22,
                         weight: FontWeight.bold,
                         color: purple,
@@ -92,14 +92,14 @@ class AuthScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  DropdownSearch<String>(
-                    onChanged: (String? value) {
-                      print(value);
-                    },
-                    items: const ['English', 'Português'],
-                    selectedItem: 'English',
-                    popupProps: const PopupProps.dialog(
-                      constraints: BoxConstraints(maxHeight: 130),
+                  Obx(
+                    () => DropdownSearch<String>(
+                      onChanged: authController.setSelectedLanguage,
+                      items: const ['English', 'Português'],
+                      selectedItem: authController.selectedLanguage,
+                      popupProps: const PopupProps.dialog(
+                        constraints: BoxConstraints(maxHeight: 130),
+                      ),
                     ),
                   ),
                 ],

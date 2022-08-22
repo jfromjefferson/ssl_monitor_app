@@ -28,7 +28,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const CustomText(text: 'Create account'),
+        title: CustomText(text: 'create_account_title'.tr),
         backgroundColor: purple,
       ),
       body: Container(
@@ -48,7 +48,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         Flexible(
                           child: CustomTextField(
                             onChanged: authController.setFirstName,
-                            hintText: 'First name',
+                            hintText: 'first_name_text_field'.tr,
                             fillColor: purple,
                           ),
                         ),
@@ -56,7 +56,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         Flexible(
                           child: CustomTextField(
                             onChanged: authController.setLastName,
-                            hintText: 'Last name',
+                            hintText: 'last_name_text_field'.tr,
                             fillColor: purple,
                           ),
                         ),
@@ -65,7 +65,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     const SizedBox(height: 15),
                     CustomTextField(
                       onChanged: authController.setUsername,
-                      hintText: 'Username',
+                      hintText: 'username_text_field'.tr,
                       fillColor: purple,
                       textCapitalization: TextCapitalization.none,
                     ),
@@ -73,7 +73,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     Obx(
                       () => CustomTextField(
                         onChanged: authController.setPassword,
-                        hintText: 'Password',
+                        hintText: 'password_text_field'.tr,
                         fillColor: purple,
                         obscureText: authController.isPasswordObscured,
                         suffixIcon: authController.isPasswordObscured
@@ -86,7 +86,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     Obx(
                       () => CustomTextField(
                         onChanged: authController.setRepeatPassword,
-                        hintText: 'Repeat password',
+                        hintText: 'repeat_password_text_field'.tr,
                         fillColor: purple,
                         obscureText: authController.isRepeatPasswordObscured,
                         suffixIcon: authController.isRepeatPasswordObscured
@@ -102,7 +102,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         onPressed: authController.isCreateAccountButtonEnabled
                             ? authController.create
                             : () {},
-                        text: 'Create new account',
+                        text: 'create_account_button_text'.tr,
                         buttonColor: authController.isCreateAccountButtonEnabled
                             ? purple
                             : purple.withAlpha(950),

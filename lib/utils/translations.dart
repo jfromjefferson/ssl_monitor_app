@@ -29,6 +29,7 @@ class AppTranslation extends Translations {
           'update': 'Update',
           'delete': 'Delete',
           'cancel': 'Cancel',
+          'empty_list': 'Nothing to show :(',
         },
         'pt_BR': {
           'first_name_text_field': 'Nome',
@@ -56,6 +57,7 @@ class AppTranslation extends Translations {
           'update': 'Atualizar',
           'delete': 'Excluir',
           'cancel': 'Cancelar',
+          'empty_list': 'Nada pra mostrar :(',
         }
       };
 }

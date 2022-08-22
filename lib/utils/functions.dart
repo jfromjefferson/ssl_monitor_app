@@ -8,6 +8,7 @@ import 'package:ssl_monitor/custom_widget/custom_text.dart';
 import 'package:ssl_monitor/custom_widget/custom_text_field.dart';
 import 'package:ssl_monitor/database/model/service/query.dart';
 import 'package:ssl_monitor/database/model/service/service.dart';
+import 'package:ssl_monitor/database/model/settings/settings.dart';
 import 'package:ssl_monitor/database/model/user/user.dart';
 import 'package:ssl_monitor/screen/main_screen.dart';
 import 'package:ssl_monitor/utils/local_notification.dart';
@@ -30,6 +31,7 @@ void showSnackbar({
 void registerAdapters() {
   Hive.registerAdapter(UserAdapter());
   Hive.registerAdapter(ServiceAdapter());
+  Hive.registerAdapter(SettingsAdapter());
 }
 
 String formatCertExpiryDate({
@@ -46,7 +48,7 @@ String formatCertExpiryDate({
   }
 
   DateTime strToDateTime = DateFormat('yyyy-MM-dd HH:mm').parse(date);
-  String dateFormatted = DateFormat('yyyy-MM-dd HH:mm').format(strToDateTime);
+  String dateFormatted = DateFormat('date_format'.tr).format(strToDateTime);
 
   return dateFormatted;
 }
@@ -135,7 +137,9 @@ void showServiceConfigDialog({
       },
       child: AlertDialog(
         title: CustomText(
-          text: service == null ? 'New service' : 'Update service',
+          text: service == null
+              ? 'create_service_title'.tr
+              : 'update_service_title'.tr,
           size: 20,
           weight: FontWeight.bold,
           align: TextAlign.center,
@@ -147,7 +151,7 @@ void showServiceConfigDialog({
               CustomTextField(
                 controller: serviceNameController,
                 onChanged: appController.setServiceName,
-                hintText: 'Name',
+                hintText: 'service_name_text_field'.tr,
                 fillColor: purple,
               ),
               const SizedBox(height: 10),
@@ -167,7 +171,7 @@ void showServiceConfigDialog({
                 children: [
                   Column(
                     children: [
-                      const CustomText(text: 'Enabled'),
+                      CustomText(text: 'service_enabled_text'.tr),
                       Obx(
                         () => Switch(
                           onChanged: appController.setIsEnabled,
@@ -179,7 +183,7 @@ void showServiceConfigDialog({
                   ),
                   Column(
                     children: [
-                      const CustomText(text: 'Notify'),
+                      CustomText(text: 'service_notify_text'.tr),
                       Obx(
                         () => Switch(
                           onChanged: appController.setIsNotify,
@@ -195,8 +199,8 @@ void showServiceConfigDialog({
           ),
         ),
         actions: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               service == null
                   ? Obx(
@@ -204,43 +208,44 @@ void showServiceConfigDialog({
                         onPressed: appController.isCreateServiceButtonEnabled
                             ? appController.createService
                             : null,
-                        text: 'Save',
+                        text: 'save'.tr,
                         buttonColor: purple,
-                        padding: const EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(10),
                       ),
                     )
-                  : Row(
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         CustomButton(
                           onPressed: appController.isCreateServiceButtonEnabled
                               ? () =>
                                   appController.updateService(service: service)
                               : null,
-                          text: 'Update',
+                          text: 'update'.tr,
                           buttonColor: purple,
-                          padding: const EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(10),
                         ),
-                        const SizedBox(width: 5),
+                        const SizedBox(height: 5),
                         CustomButton(
                           onPressed: () {
                             Get.back();
                             appController.deleteService(service: service);
                           },
-                          text: 'Delete',
+                          text: 'delete'.tr,
                           buttonColor: Colors.orange,
-                          padding: const EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(10),
                         ),
                       ],
                     ),
-              const SizedBox(width: 5),
+              const SizedBox(height: 5),
               CustomButton(
                 onPressed: () {
                   appController.resetData();
                   Get.back(closeOverlays: true);
                 },
-                text: 'Cancel',
+                text: 'cancel'.tr,
                 buttonColor: Colors.red,
-                padding: const EdgeInsets.all(5),
+                padding: const EdgeInsets.all(10),
               ),
             ],
           ),

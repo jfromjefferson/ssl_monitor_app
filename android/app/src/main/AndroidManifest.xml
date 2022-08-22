@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.oitobits.ssl_monitor">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="ssl_monitor"
         android:name="${applicationName}"

@@ -3,6 +3,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:ssl_monitor/database/model/service/query.dart';
 import 'package:ssl_monitor/database/model/service/service.dart';
+import 'package:ssl_monitor/database/model/settings/query.dart';
+import 'package:ssl_monitor/database/model/settings/settings.dart';
 import 'package:ssl_monitor/database/model/user/query.dart';
 import 'package:ssl_monitor/database/model/user/user.dart';
 import 'package:ssl_monitor/utils/functions.dart';
@@ -29,6 +31,7 @@ class AppController extends GetxController {
 
   late String apiUrl;
   late String apiKey;
+  Settings? settings;
 
   @override
   void onInit() async {
@@ -36,11 +39,19 @@ class AppController extends GetxController {
     apiKey = dotenv.env['API_KEY']!;
 
     user = (await getUser())!;
+    settings = await getSettings();
+
     _serviceList.value = await getServiceList();
     _userName.value = user.name;
 
     if (serviceList.isEmpty) {
       await getServiceFromServer();
+    }
+
+    if (settings != null) {
+      Locale locale = Locale(settings!.languageCode);
+
+      Get.updateLocale(locale);
     }
 
     super.onInit();

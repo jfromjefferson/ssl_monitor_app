@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
+import 'package:ssl_monitor/database/model/settings/query.dart';
+import 'package:ssl_monitor/database/model/settings/settings.dart';
 import 'package:ssl_monitor/database/model/user/query.dart';
 import 'package:ssl_monitor/database/model/user/user.dart';
 import 'package:ssl_monitor/screen/main_screen.dart';
@@ -17,24 +19,35 @@ class AuthController extends GetxController {
   final RxBool _isPasswordObscured = true.obs;
   final RxBool _isRepeatPasswordObscured = true.obs;
   final RxBool _isCreateAccountButtonEnabled = false.obs;
-
-  late String apiUrl;
-  late String apiKey;
+  final RxString _selectedLanguage = 'English'.obs;
 
   String get fistName => _firstName.value;
   String get lastName => _lastName.value;
   String get username => _username.value;
   String get password => _password.value;
   String get repeatPassword => _repeatPassword.value;
-
+  String get selectedLanguage => _selectedLanguage.value;
   bool get isPasswordObscured => _isPasswordObscured.value;
   bool get isRepeatPasswordObscured => _isRepeatPasswordObscured.value;
   bool get isCreateAccountButtonEnabled => _isCreateAccountButtonEnabled.value;
+
+  late String apiUrl;
+  late String apiKey;
+
+  Settings? settings;
 
   @override
   void onInit() async {
     apiUrl = dotenv.env['API_URL']!;
     apiKey = dotenv.env['API_KEY']!;
+
+    settings = await getSettings();
+
+    if (settings == null) {
+      Settings settingsTemp = Settings(languageCode: 'en_US');
+      await createDBSettings(settings: settingsTemp);
+      settings = settingsTemp;
+    }
 
     super.onInit();
   }
@@ -94,6 +107,22 @@ class AuthController extends GetxController {
     }
   }
 
+  void setSelectedLanguage(String? input) async {
+    if (input != null) {
+      _selectedLanguage.value = input;
+
+      String languageCode = input == 'English' ? 'en_US' : 'pt_BR';
+
+      if (settings != null) {
+        settings!.languageCode = languageCode;
+        settings!.save();
+      }
+
+      Locale locale = Locale(languageCode);
+      Get.updateLocale(locale);
+    }
+  }
+
   Future<void> auth() async {
     Get.focusScope!.unfocus();
 
@@ -128,6 +157,8 @@ class AuthController extends GetxController {
 
         Get.offAll(() => MainScreen());
       } else {
+        print(result);
+        result['response'].remove('status_code');
         result['response'].forEach((key, value) {
           showSnackbar(
             success: success,
@@ -173,6 +204,7 @@ class AuthController extends GetxController {
 
         Get.offAll(() => MainScreen());
       } else {
+        result['response'].remove('status_code');
         result['response'].forEach((key, value) {
           showSnackbar(
             success: success,

@@ -23,7 +23,7 @@ class MainScreen extends StatelessWidget {
         title: Center(
           child: Obx(
             () => CustomText(
-              text: 'Hi, ${appController.userName}',
+              text: '${'hi'.tr}, ${appController.userName}',
             ),
           ),
         ),
@@ -32,9 +32,8 @@ class MainScreen extends StatelessWidget {
             onPressed: () {
               Get.dialog(
                 AlertDialog(
-                  title: const CustomText(text: 'Exit'),
-                  content:
-                      const CustomText(text: 'Are you sure you want to exit?'),
+                  title: CustomText(text: 'exit_title'.tr),
+                  content: CustomText(text: 'exit_text'.tr),
                   actions: [
                     CustomButton(
                       onPressed: () async {
@@ -46,7 +45,7 @@ class MainScreen extends StatelessWidget {
 
                         Get.offAll(() => AuthScreen());
                       },
-                      text: 'Yes',
+                      text: 'yes'.tr,
                       buttonColor: Colors.red,
                       padding: const EdgeInsets.all(5),
                     ),
@@ -54,7 +53,7 @@ class MainScreen extends StatelessWidget {
                       onPressed: () {
                         Get.back();
                       },
-                      text: 'No',
+                      text: 'no'.tr,
                       buttonColor: purple,
                       padding: const EdgeInsets.all(5),
                     ),
@@ -96,16 +95,16 @@ class MainScreen extends StatelessWidget {
                           ),
                           subtitle: CustomText(
                             text:
-                                'Valid until ${formatCertExpiryDate(service: appController.serviceList[index], certValid: 'until')}',
+                                '${'cert_valid_until_text'.tr} ${formatCertExpiryDate(service: appController.serviceList[index], certValid: 'until')}',
                           ),
                         ),
                       ),
                     );
                   },
                 )
-              : const Center(
+              : Center(
                   child: CustomText(
-                    text: 'Nothing to show :(',
+                    text: 'empty_list'.tr,
                     size: 23,
                     weight: FontWeight.bold,
                   ),

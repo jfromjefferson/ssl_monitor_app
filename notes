@@ -7,3 +7,4 @@ keytool -genkey -v -keystore keystore.jks -keyalg RSA -keysize 2048 -validity 10
 TypeId:
 User - 1
 Service - 2
+Settings - 3
