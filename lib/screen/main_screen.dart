@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
@@ -19,7 +20,45 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const SizedBox(),
+        leading: IconButton(
+          onPressed: () {
+            Get.dialog(
+              Obx(
+                () => AlertDialog(
+                  title: CustomText(text: 'settings'.tr),
+                  content: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        CustomText(text: 'select_language'.tr),
+                        const SizedBox(height: 10),
+                        DropdownSearch<String>(
+                          onChanged: appController.setSelectedLanguage,
+                          items: const ['English', 'Português'],
+                          selectedItem: appController.selectedLanguage,
+                          popupProps: const PopupProps.dialog(
+                            constraints: BoxConstraints(maxHeight: 130),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  actions: [
+                    CustomButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      text: 'close'.tr,
+                      buttonColor: Colors.red,
+                      padding: const EdgeInsets.all(5),
+                    )
+                  ],
+                ),
+              ),
+            );
+          },
+          icon: const Icon(LineIcons.cog),
+        ),
         title: Center(
           child: Obx(
             () => CustomText(

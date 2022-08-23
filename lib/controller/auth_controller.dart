@@ -5,6 +5,7 @@ import 'package:ssl_monitor/database/model/settings/query.dart';
 import 'package:ssl_monitor/database/model/settings/settings.dart';
 import 'package:ssl_monitor/database/model/user/query.dart';
 import 'package:ssl_monitor/database/model/user/user.dart';
+import 'package:ssl_monitor/screen/auth_screen.dart';
 import 'package:ssl_monitor/screen/main_screen.dart';
 import 'package:ssl_monitor/utils/functions.dart';
 import 'package:ssl_monitor/utils/requests.dart';
@@ -157,7 +158,6 @@ class AuthController extends GetxController {
 
         Get.offAll(() => MainScreen());
       } else {
-        print(result);
         result['response'].remove('status_code');
         result['response'].forEach((key, value) {
           showSnackbar(
@@ -202,7 +202,7 @@ class AuthController extends GetxController {
 
         Get.delete<AuthController>();
 
-        Get.offAll(() => MainScreen());
+        Get.offAll(() => AuthScreen());
       } else {
         result['response'].remove('status_code');
         result['response'].forEach((key, value) {

@@ -30,6 +30,9 @@ class AppTranslation extends Translations {
           'delete': 'Delete',
           'cancel': 'Cancel',
           'empty_list': 'Nothing to show :(',
+          'settings': 'Settings',
+          'select_language': 'Select language',
+          'close': 'Close',
         },
         'pt_BR': {
           'first_name_text_field': 'Nome',
@@ -58,6 +61,9 @@ class AppTranslation extends Translations {
           'delete': 'Excluir',
           'cancel': 'Cancelar',
           'empty_list': 'Nada pra mostrar :(',
+          'settings': 'Configurações',
+          'select_language': 'Selecionar idioma',
+          'close': 'Fechar',
         }
       };
 }

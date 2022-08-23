@@ -20,10 +20,12 @@ class AppController extends GetxController {
   final RxBool _isNotify = true.obs;
   final RxBool _isCreateServiceButtonEnabled = false.obs;
   final RxList _serviceList = [].obs;
+  final RxString _selectedLanguage = 'English'.obs;
 
   String get userName => _userName.value;
   String get serviceName => _serviceName.value;
   String get serviceUrl => _serviceUrl.value;
+  String get selectedLanguage => _selectedLanguage.value;
   bool get isEnabled => _isEnabled.value;
   bool get isNotify => _isNotify.value;
   bool get isCreateServiceButtonEnabled => _isCreateServiceButtonEnabled.value;
@@ -49,6 +51,8 @@ class AppController extends GetxController {
     }
 
     if (settings != null) {
+      _selectedLanguage.value =
+          settings!.languageCode == 'en_US' ? 'English' : 'Português';
       Locale locale = Locale(settings!.languageCode);
 
       Get.updateLocale(locale);
@@ -87,14 +91,26 @@ class AppController extends GetxController {
 
   void setIsEnabled(bool isEnabled) {
     _isEnabled.value = isEnabled;
-
-    // toggleCreateServiceButton();
   }
 
   void setIsNotify(bool isNotify) {
     _isNotify.value = isNotify;
+  }
 
-    // toggleCreateServiceButton();
+  void setSelectedLanguage(String? input) async {
+    if (input != null) {
+      _selectedLanguage.value = input;
+
+      String languageCode = input == 'English' ? 'en_US' : 'pt_BR';
+
+      if (settings != null) {
+        settings!.languageCode = languageCode;
+        settings!.save();
+      }
+
+      Locale locale = Locale(languageCode);
+      Get.updateLocale(locale);
+    }
   }
 
   void createService() async {

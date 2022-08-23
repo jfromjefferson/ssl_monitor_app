@@ -2,7 +2,7 @@
     package="com.oitobits.ssl_monitor">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="ssl_monitor"
+        android:label="SSL Monitor"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
