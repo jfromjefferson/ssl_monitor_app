@@ -13,4 +13,3 @@ Ao cadastrar um serviço, o app cria notificações locais nos 10 ultimos dias d
 - hive e hive_flutter - Banco de dados
 - dio - Requisições
 - flutter_local_notifications - Notificações
-- Dê uma conferida no <a href="https://play.google.com/store/apps/details?id=com.oitobits.ssl_monitor">google play</a>
